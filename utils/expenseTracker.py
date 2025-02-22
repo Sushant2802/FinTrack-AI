@@ -25,7 +25,7 @@ class IncomeManager:
 
     def addIncome(self, date, name, amount, source, description):
         self.cursor.execute('''INSERT INTO income (name, date, amount, source, description)
-                            VALUES (?, ?, ?, ?, ?)'''
+                            VALUES (?, ?, ?, ?, ?)''',
                             (name, date, amount, source, description))
         self.conn.commit()
 
@@ -34,7 +34,7 @@ class IncomeManager:
         return pd.read_sql(query, self.conn)
     
     def deleteIncome(self, income_id):
-        self.cursor.execute("DELETE FROM incoem WHERE id=?", (income_id,))
+        self.cursor.execute("DELETE FROM income WHERE id=?", (income_id,))
         self.conn.commit()
 
 
@@ -51,13 +51,13 @@ class ExpenseManager:
         self.cursor = self.conn.cursor()
 
         # Create the table if it doesn't exist
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS expenses
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS expenses (
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             name TEXT,
                             date DATE,
                             amount REAL,
                             category TEXT,
-                            description TEXT''')
+                            description TEXT)''')
         self.conn.commit()
 
     def addExpense(self, date, name, amount, category, description):
@@ -86,8 +86,12 @@ class Account:
         self.Balance = 0.0 
 
     def getBalance(self):
-        total_income = self.IncomeManager.viewIncome()["amount"].sum()
-        total_expense = self.ExpenseManager.viewExpenses()["amount"].sum()
+        # total_income = self.IncomeManager.viewIncome()["amount"].sum()
+        # total_expense = self.ExpenseManager.viewExpenses()["amount"].sum()
+        
+        total_income = self.IncomeManager.viewIncome().get("amount", pd.Series([0])).sum()
+        total_expense = self.ExpenseManager.viewExpenses().get("amount", pd.Series([0])).sum()
+    
         self.Balance = total_income - total_expense 
         return self.Balance
     
@@ -115,7 +119,7 @@ class Account:
         if incomes.empty:
             st.warning("No income records to delete")
             return
-        
+    
         if income_id in incomes["id"].values:
             amount = incomes.loc[incomes['id'] == income_id, "amount"].iloc[0]
             self.IncomeManager.deleteIncome(income_id)
@@ -124,7 +128,7 @@ class Account:
         else:
             st.warning(f"Invalid Income ID: {income_id}")
 
-
+    
     def deleteExpense(self, expense_id):
         expenses = self.ExpenseManager.viewExpenses()
         if expenses.empty:
