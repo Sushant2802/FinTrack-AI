@@ -47,7 +47,7 @@ def get_budget_insights(user_query, transactions_text):
     """
 
     response = co.chat(
-        model='command-xlarge-nightly',
+        model='command-xlarge-nightly',   
         message=prompt
     )
 
