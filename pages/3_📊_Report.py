@@ -155,14 +155,14 @@ with st.sidebar:
         </style>
         <div class="chatbot-container" onclick="document.getElementById('chat_expander').click();">
             <div class="chatbot-icon">🤖</div>
-            <div class="chatbot-name">SynBot - AI Assistant</div>
+            <div class="chatbot-name">FinTrack - AI Assistant</div>
         </div>
         """,
         unsafe_allow_html=True
     )
 
     # Expander for AI Chat (appears when button is clicked)
-    with st.expander("💬 Chat with SynBot", expanded=False):
+    with st.expander("💬 Chat with FinTrack-AI Assistant", expanded=False):
         st.write(f"👋 Hi {st.session_state.user_email.split('@')[0]}! How can I help you today")
 
         user_query = st.text_input("Enter your question:")
