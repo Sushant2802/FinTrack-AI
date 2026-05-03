@@ -26,6 +26,7 @@
 ## 👨‍💻 Author
 
 **Sushant Mane** 
+
 _AI Engineer_  
 📧 **sushantm1210@gmail.com**
 
